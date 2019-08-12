@@ -10,7 +10,7 @@ def list(item):
             "Site": "UK",
             "ConditionID": "1000",
             "PaymentMethods": "PayPal",
-            "PayPalEmailAddress": "tomsturgeon8@gmail.com",
+            "PayPalEmailAddress": "",
             "PrimaryCategory": {"CategoryID": f"{item.category_id}"},
             "Description": f"{item.description}",
             "ListingDuration": "Days_10",
