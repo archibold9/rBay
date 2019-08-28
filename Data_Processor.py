@@ -5,7 +5,7 @@ import Config
 from ebaysdk.trading import Connection
 
 def print_listings():
-	print(bcolors.WARNING + f"\nFound {len(Config.subfolders)} possible listings\n")
+	print(bcolors.WARNING + "\nFound {} possible listings\n".format(len(Config.subfolders)))
 	for x in Config.subfolders:
 		print(bcolors.HEADER + "    + " + x)
 	print("")
@@ -15,17 +15,18 @@ def start_listing():
 		print(bcolors.WHITE)
 		data = populate_data_list(item)
 		if(Config.debug):
-			print(f"\n\n{data}")
+			print("\n\n{}".format(data))
 		save_to_json(data, item)
 		print(bcolors.OKGREEN + "\nSuccessfully saved item data!\n\n")
 
 def populate_data_list(item):
 	data = {}
-	data["title"] = str(input(f"Enter title for listing: [{item}]:   ") or item)
-	data["description"] = str(input(f"Enter description for listing: [{Config.default_desc[:20]}...]  ") or Config.default_desc)
-	data["price"] = str(input("Enter price:   "))	
+	data["title"] = str(raw_input("Enter title for listing: [{}]:   ".format(item)) or item)
+	data["description"] = str(raw_input("Enter description for listing: [{}...]  ".format(Config.default_desc[:20])) or Config.default_desc)
+	data["price"] = str(raw_input("Enter price:   "))	
 	data["category_id"] = categories_picker(data["title"])
 	data["images"] = get_images(item)
+	data["posted"] = "false"
 	return data
 
 
@@ -37,7 +38,7 @@ def save_to_json(data, directory):
 	save_loc = Config.listing_directory + "/" + directory
 	with open(save_loc + "/item_data.json", 'w') as output:
 		if(Config.debug):
-			print(f"\nSaving JSON file to {save_loc}")
+			print("\nSaving JSON file to {}".format(save_loc))
 		json.dump(data, output)
 
 def categories_picker(query_string):
@@ -53,7 +54,7 @@ def categories_picker(query_string):
 	for x in categories:
 	    print(bcolors.HEADER + "    + " + x["Category"]["CategoryName"] + bcolors.OKGREEN + "\t(" + x["Category"]["CategoryID"] + ")")
 
-	return str(input("\nEnter Category number: "))
+	return str(raw_input("\nEnter Category number: "))
     
 
 def start():

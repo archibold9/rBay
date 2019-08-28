@@ -1,13 +1,15 @@
 from ebaysdk.trading import Connection
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
+import Config
+import json
 
 # URGENT TODO add support for images
-def list(item):
-    api = Connection(config_file="ebay.yaml", debug=True, siteid=3)
+def list(item, images):
+    api = Connection(config_file="ebay.yaml", debug=Config.debug, siteid=3)
     request = {
         "Item": {
-            "Title": f"{item.title}",
+            "Title": "{}".format(item.title),
             "Country": "GB",
             "Location": "England",
             "Site": "UK",
@@ -17,15 +19,18 @@ def list(item):
             "PaymentMethods": "PayPal",
             "PayPalEmailAddress": "tomsturgeon8@gmail.com",
             "PrimaryCategory": {
-                "CategoryID": f"{item.category_id}",
+                "CategoryID": "{}".format(item.category_id),
             },
-            "Description": f"{item.description}",
+            "Description": "{}".format(item.description),
             "ListingDuration": "Days_10",
-            "StartPrice": f"{item.price}",
+            "StartPrice": "{}".format(item.price),
             "Currency": "GBP",
             "ReturnPolicy": {
                 "ReturnsAcceptedOption": "ReturnsNotAccepted",
             },
+            # "PictureDetails":{
+            #     "PictureURL": "https://www.tomsturgeon.co.uk/img/test.jpeg"
+            # },
             "ShippingDetails": {
                 "ShippingServiceOptions": {
                     "FreeShipping": "True",
@@ -35,11 +40,14 @@ def list(item):
             "DispatchTimeMax": "3"
         }
     }
+
+
+
     # If debug mode then only use verify add item else use real add item api call
     if(Config.debug):
         res = api.execute("VerifyAddItem", request)
     else:
-        res = api.execute("AddItem", request)
+        res = api.execute("AddItem", request)   
 
 
     

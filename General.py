@@ -1,5 +1,4 @@
 import json
-from enum import Enum
 from Utilities import bcolors
 
 class Item:
@@ -10,7 +9,7 @@ class Item:
 			self.filepath = filepath
 
 	def __str__(self): # pretty
-		return bcolors.WARNING + self.title + bcolors.WHITE + "\n\tDESC\t"  + self.description[:25] + "...\n\tPRICE\t£" + self.price + "\n\tCATEGORY_ID\t" + self.category_id 
+		return self.title
 
 	def setPosted(self):
 		self.__dict__["posted"] = "true"
