@@ -3,7 +3,7 @@ Incomplete/
 ebay.yaml
 test.json
 data.xml
-test.jpeg
+*.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,12 +1,20 @@
 from ebaysdk.trading import Connection
 from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
-import Config
-import json
+import config
+import db
 
-# URGENT TODO add support for images
-def list(item, images):
-    api = Connection(config_file="ebay.yaml", debug=Config.debug, siteid=3)
+
+def get_items_from_db(already_posted=False):
+    con = db.connect()
+    cur = con.cursor()
+    if already_posted:
+        return cur.execute("SELECT * FROM ITEMS").fetchall()
+    else:
+        return cur.execute("SELECT * FROM ITEMS WHERE posted = 0").fetchall()
+
+
+def list_item(item, images):
+    api = Connection(config_file=config.yaml_location, debug=config.debug, siteid=config.site_id)
     request = {
         "Item": {
             "Title": "{}".format(item.title),
@@ -21,16 +29,13 @@ def list(item, images):
             "PrimaryCategory": {
                 "CategoryID": "{}".format(item.category_id),
             },
-            "Description": "{}".format(item.description),
+            "Description": "{}".format(item.desc),
             "ListingDuration": "Days_10",
             "StartPrice": "{}".format(item.price),
             "Currency": "GBP",
             "ReturnPolicy": {
                 "ReturnsAcceptedOption": "ReturnsNotAccepted",
             },
-            # "PictureDetails":{
-            #     "PictureURL": "https://www.tomsturgeon.co.uk/img/test.jpeg"
-            # },
             "ShippingDetails": {
                 "ShippingServiceOptions": {
                     "FreeShipping": "True",
@@ -41,14 +46,12 @@ def list(item, images):
         }
     }
 
-
-
     # If debug mode then only use verify add item else use real add item api call
-    if(Config.debug):
-        res = api.execute("VerifyAddItem", request)
+    if config.debug:
+        api.execute("VerifyAddItem", request)
     else:
-        res = api.execute("AddItem", request)   
+        api.execute("AddItem", request)
 
 
-    
-
+if __name__ == '__main__':
+    print(get_items_from_db()[0]['title'])
