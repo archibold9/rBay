@@ -1,4 +1,4 @@
-from general import Item
+from item import Item
 from utilities import b_colors
 import config
 from ebaysdk.trading import Connection
@@ -9,7 +9,7 @@ API = Connection(config_file=config.yaml_location, debug=config.debug, siteid=co
 def start():
     print("\nFound {} possible listings\n".format(len(config.subfolders)))
     for x in config.subfolders:
-        print( "    + " + x)
+        print("    + " + x)
     print("")
     for from_file in config.subfolders:
         create_item(from_file)
@@ -22,7 +22,7 @@ def create_item(from_file):
     price = str(raw_input("Enter price:   "))
     category = get_categories(title)
     images = config.parent_directory + "/" + from_file
-    item = Item(title=title, desc=desc, price=price, category_id=category, images=images, posted=False)
+    item = Item(title=title, desc=desc, price=price, category_id=category, img_dir=images, posted=False)
     if item.save() is not None:
         print("Successfully added item to local database.")
     else:

@@ -14,7 +14,7 @@ def get_items_from_db(already_posted=False):
 
 
 def list_item(item, images):
-    api = Connection(config_file=config.yaml_location, debug=config.debug, siteid=config.site_id)
+    api = Connection(config_file=config.yaml_location, domain="api.sandbox.ebay.com", debug=config.debug, siteid=config.site_id)
     request = {
         "Item": {
             "Title": "{}".format(item.title),
@@ -36,6 +36,9 @@ def list_item(item, images):
             "ReturnPolicy": {
                 "ReturnsAcceptedOption": "ReturnsNotAccepted",
             },
+            "PictureDetails": {
+                "PictureURL": []
+            },
             "ShippingDetails": {
                 "ShippingServiceOptions": {
                     "FreeShipping": "True",
@@ -46,9 +49,12 @@ def list_item(item, images):
         }
     }
 
+    for img in item.image_url_arr:
+        request["Item"]["PictureDetails"]["PictureURL"].append(img)
+
     # If debug mode then only use verify add item else use real add item api call
     if config.debug:
-        api.execute("VerifyAddItem", request)
+        api.execute("AddItem", request)
     else:
         api.execute("AddItem", request)
 
